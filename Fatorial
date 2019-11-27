@@ -1,0 +1,55 @@
+.data
+	msg1: .asciiz "\nDigite aqui um número maior do que 0 e menor do que 12: "
+	msg2: .asciiz "\nO Fatorial deste número é: "
+	msg3: .asciiz "\nFim!"
+.text
+
+main:
+
+	#Solicite um número inteiro N, onde (0 < N <= 12) e apresente seu fatorial
+	#N = -5
+	#while N <= 0 or N > 12:
+  	#	N = int(input("Digite aqui um número maior do que 0 e menor ou igual a 12: "))
+	#fat = 1
+	#n1 = 1
+
+	#while n1 <= N:
+  	#	fat = n1 * fat
+  	#	n1 += 1
+	#print("O fatoral de", N, "é: ", fat)
+
+	#t0 = N
+	#t1 = fat
+	#t2 = n1
+
+	Entrada:
+	li $v0, 4
+	la $a0, msg1
+	syscall
+
+	li $v0, 5
+	syscall
+	add $t0, $v0, $zero
+	
+	ble $t0, 0 Entrada
+	bgt $t0, 12 Entrada
+
+	li $t1, 1
+	li $t2, 1
+	
+	Laco:
+	bgt $t2, $t0 Fim
+		mul $t1, $t2, $t1
+		add $t2, $t2, 1
+	j Laco
+	Fim:
+	li $v0, 4
+	la $a0, msg2
+	syscall
+	li $v0, 1
+	add $a0, $t1, $zero
+	syscall
+
+	li $v0, 4
+	la $a0, msg3
+	syscall
