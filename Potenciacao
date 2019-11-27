@@ -1,0 +1,62 @@
+.data
+	msg1: .asciiz "\nDigite aqui o valor da base: "
+	msg2: .asciiz "\nDigite aqui o valor do expoente: "
+	msg3: .asciiz "\nO resultado será: "
+.text
+
+main:
+	#Calcular o valor de uma potência. sabendo que a base será >= 2 e a potência será um número maior do que 0
+	#base = 0
+	#expoente = 0
+	#while base < 2 or expoente <= 0:
+  		#base = int(input("Digite aqui uma base: "))
+		#expoente = int(input("Digite aqui o expoente: "))
+	#resultado = 1
+	#while expoente >= 1:
+		#resultado = base * resultado
+		#expoente -= 1
+	#print("O resultado é: ", resultado)
+
+	#t0 = base
+	#t1 = expoente
+	#t2 = resultado
+
+	Laco:
+		li $v0, 4
+		la $a0, msg1
+		syscall
+	
+		li $v0, 5
+		syscall
+		add $t0, $v0, $zero
+	
+		li $v0, 4
+		la $a0, msg2
+		syscall
+
+		li $v0, 5
+		syscall
+		add $t1, $v0, $zero
+
+		blt $t0, 2, Laco	#se base < 2
+		ble $t1, 0, Laco	#se expoente <= 0
+	
+	#Fim do Laco
+	
+	li $t2, 1	#resultado = 1
+	
+	Laco2:
+		mul $t2, $t0, $t2
+		sub $t1, $t1, 1
+		bge $t1, 1, Laco2
+	#Fim do Laco2
+
+	li $v0, 4
+	la $a0, msg3
+	syscall
+
+	li $v0, 1
+	add $a0, $t2, $zero
+	syscall
+	
+		
