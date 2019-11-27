@@ -1,0 +1,68 @@
+.data
+	msg1: .asciiz "\nDigite aqui um numero maior que um e menor ou igual a dez mil: "
+	msg2: .asciiz "\nEsse numero em octal equivale a "
+	msg3: .asciiz "\nNumero invalido. O numero deve ser maior do que 1 e menor ou igual a 10000, tente novamente"
+	msg4: .asciiz "\nCaso queira converter outro numero, pressione 1 para executar novamente o programa: "
+	msg5: .asciiz "\nFim! "
+.text
+
+main:
+	Inicio:
+	
+	li $v0, 4
+	la $a0,msg1	#The msg1 will be display
+	syscall
+	
+	li $v0, 5  #The program will read the inputed number
+	syscall
+	add $t0, $v0, $zero  #This will travel the number inputed to the t0 variable
+	
+	ble $t0, 1 Invalido #This will check if the number inputed is lesser than 1
+	bgt $t0, 10000 Invalido #This will check if the number inputed is greater than 10000
+	
+	
+	#t0 number - input - This is the variable that will receive the number of user's choice.
+	#t1 powerten - This variable will simulate ten's potential
+	#t2 octal - This variable will contain our number in octal
+	#t3 rest - This variable will contain the rest of the divisions
+	#t4 mul - This variable will receive ((n1 mod 8) * powerten) 
+	
+	
+	li $t1, 1 #powerten will start at 10^0 in other words 1
+	li $t2, 0 #our octal number will start in 0
+	
+	while:
+	rem $t3, $t0, 8 #(number mod 8)
+	mul $t4, $t3, $t1 #mul = (number mod 8 ) * 1
+	add $t2, $t2, $t4 #octal = octal + mul
+	div $t0, $t0, 8 #number = number // 8
+	mul $t1, $t1, 10 #powerten = powerten * 10
+	bgt $t0, 0, while #while number != 0
+	
+	li $v0, 4
+	la $a0, msg2
+	syscall
+	li $v0, 1
+	add $a0, $t2, $zero #Will print the octal number
+	syscall
+	
+	li $v0, 4
+	la $a0, msg4 #If the user want to run again the program
+	syscall
+	li $v0, 5
+	syscall
+	beq $v0, 1 Inicio #Press '1' to run again the program
+	j Fim
+	
+	Invalido:
+	li $v0, 4
+	la $a0, msg3 #Invalid msg
+	syscall
+	j Inicio
+	
+	Fim:
+	li $v0, 4
+	la $a0, msg5 #End message
+	syscall
+	
+	Exit:
